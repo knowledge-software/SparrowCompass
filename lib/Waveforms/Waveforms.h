@@ -13,9 +13,10 @@ class Waveforms {
     protected:
         // Provides for digital waveforms to be used in developing visual outputs on WS2812
         unsigned long period = 1000;    // ms
+        unsigned long dutyCyc = 500;    // 50% of period
         int amp = 255;                  // max val
         int offset = 0;                 // offset
-        int dutyCyc = 500;              // 50% of period   
+        int lastValue;        // for slope detection
 
     public:
         Waveforms(unsigned long per = 1000, int ampl = 255, int offs = 0);
@@ -23,11 +24,13 @@ class Waveforms {
         int  getPeriod();
         int  getAmplitude();
         int  getOffset();
+        int  getCycles();
 
-        void setPeriod(int period);
+        void setPeriod(unsigned long period);
         void setAmplitude(int amp);
-        void setOffset(int offset);
-        void setDutyCycle(int dutyCycle); // Only valid for square wave, call AFTER setting period
+        void setOffset(int offset); 
+        void setDutyCycle(int dutyCycle); // Only valid for square wave 0-100, call AFTER setting period
+        bool isFalling();  // slope of waveform
 
         // square wave with duty cycle represented as length in period
         // e.g. a call of squareWave(period/2) would be 50% duty cycle, period/4 would be 25%, etc.

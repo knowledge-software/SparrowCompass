@@ -35,8 +35,15 @@ Waveforms::getOffset() {
     return offset;
     }
 
+int
+Waveforms::getCycles() {
+    // retrieve the approximate number of cycles
+    return millis() % period;
+}
+
+
 void
-Waveforms::setPeriod(int per) {
+Waveforms::setPeriod(unsigned long per) {
     //"""set the period"""
     period = per;
     }
@@ -53,6 +60,8 @@ Waveforms::setOffset(int offs) {
     offset = offs;
     }
 
+
+
 void
 Waveforms::setDutyCycle(int duty) {
     // """set the duty cycle"""
@@ -68,24 +77,24 @@ Waveforms::squareWave(unsigned long time) {
     // """get the value of a square wave @ time with duty cycle expressed as portion of period"""
     if (time == 0) time = millis();
     if ((time % period) < dutyCyc)
-      return amp;
+        return amp + offset;
     else
-      return offset;
+        return offset;
     }
 
 /**
- * sawtooth wave of preset period period
+ * sawtooth wave of preset period
  **/
 int
 Waveforms::sawToothWave(unsigned long time) {
     // """get the value of a saw tooth wave @ time ms"""
     if (time == 0) time = millis();
     unsigned long now = time % period;
-    return map(now, 0, period, offset, amp);
+    return map(now, 0, period, offset, offset + amp); // probably should be: map(now, 0, period, offset, offset+amp)
     }
 
 /**
- * triangle wave of preset period period
+ * triangle wave of preset period
  **/
 int
 Waveforms::triangleWave(unsigned long time) {
@@ -93,14 +102,14 @@ Waveforms::triangleWave(unsigned long time) {
     if (time == 0) time = millis();
     unsigned long now = time % period;
     if (now < period / 2)
-      return map(now, 0, period/2, offset, amp);
+      return map(now, 0, period/2, offset, offset + amp); // probably should be: map(now, 0, period, offset, offset+amp)
     else
-      return map(now, period/2, period, amp, offset);
+      return map(now, period/2, period, amp + offset, offset); // probably should be: map(now, 0, period, amp+offset, offset)
     }
 
 
 /**
- * triangle wave of preset period period
+ * triangle wave of preset period
  **/
 int
 Waveforms::sineWave(unsigned long time) {
@@ -110,5 +119,5 @@ Waveforms::sineWave(unsigned long time) {
     unsigned char tau = map(now, 0, period, 0, 255);
 
     int ampl = Adafruit_NeoPixel::sine8(tau); // so we don't duplicate the table (may have to revisit)
-    return map(ampl, 0, 255, offset, amp);
+    return map(ampl, 0, 255, offset, offset + amp); // probably should be: map(now, 0, 255, offset, offset+amp)
     }

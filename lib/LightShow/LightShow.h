@@ -26,7 +26,7 @@ class LightShow {
         }
 
         void update() {
-            if (dispatch & 0x01) 
+            if (dispatch & 0x01)
                 oceanWaves(); // run ocean waves
             if (dispatch & 0x02)
                 warningRed();
@@ -65,8 +65,8 @@ class LightShow {
             pixel.show();
         }
 
-        // This is a wierd one. It is started by a 'true' option and runs for one
-        // cycle and turns itself off.
+        // This is a wierd one. It is started by a 'true' option
+        // and runs for one cycle and turns itself off.
         void warningRed(boolean init=false) {
             static uint32_t next;
             static int16_t count = -1;

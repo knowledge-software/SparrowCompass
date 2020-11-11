@@ -1,11 +1,19 @@
 #include <Arduino.h>
 #include "LightShow.h"
 #include "CompassCtl.h"
-#include <Streaming.h>
 
+#define ATtiny85
+
+#if defined(ATtiny85)
+const int LED_PIN = 4;
+const int PWM_PIN = 0;
+const int DIR_PIN = 1;
+#else
+#include <Streaming.h>
 const int LED_PIN = 2;
 const int PWM_PIN = 3;
 const int DIR_PIN = 4;
+#endif
 
 const uint32_t ROTSPD = 500; // pwm
 const uint32_t ROTTIM = 500; // ms
@@ -51,26 +59,74 @@ LightShow ring(LED_PIN, 50);
 // const int stepsPerRevolution = 2048;
 // AccelStepper stepper = AccelStepper(AccelStepper::HALF4WIRE, 8, 10, 9, 11);
 
+unsigned long wiggleTimer = 0UL;
+#define WIGGLE_TRIGGER 73*SECONDS;
+
+unsigned long crazyTimer = 0UL;
+#define CRAZY_TRIGGER 313*SECONDS;
+
+unsigned long dirTimer = 0UL;
+#define DIR_TRIGGER  20*SECONDS;
 
 /**
  *  Set up 
  */
 void setup() {
-    Serial.begin(115200);
 
     ring.begin();
     ring.oceanWaves(true);
 
+    pinMode(2, OUTPUT); // special output for scope trigger
 
+#if defined(ATtiny85)
+    crazyTimer = millis() + CRAZY_TRIGGER;
+    wiggleTimer = millis() + WIGGLE_TRIGGER;
+    dirTimer = millis() + DIR_TRIGGER;
+#else
+    Serial.begin(115200);
     Serial << "READY!" << endl;
+#endif
 }
 
+#ifdef ATtiny85
+// Debugging ATtinys requrie a scope.
+// This raises a pin to monitor status
+void triggerScope(int pin, int duration) {
+    digitalWrite(pin, HIGH);
+    delay(duration);
+    digitalWrite(pin,LOW);
+}
+#endif
 
 /**
  *  Run
  */
 void loop() {
 
+#if defined(ATtiny85)
+
+    if (millis()>crazyTimer) {
+        compass.shutDown(compass.setDirectionFlag|compass.lightWiggleFlag);
+        compass.crazyWiggle(true);
+        crazyTimer = millis() + CRAZY_TRIGGER;
+        ring.warningRed(true);
+        triggerScope(2, 3);
+    }
+
+    if (millis()>wiggleTimer) {
+        compass.shutDown(compass.setDirectionFlag);
+        compass.randomWiggle(compass.randDir, true);
+        wiggleTimer = millis() + WIGGLE_TRIGGER;
+        triggerScope(2, 5);
+    }
+
+    if (millis()>dirTimer) { 
+        compass.setDir(compass.randDir, true);
+        dirTimer = millis() + DIR_TRIGGER + random(500);
+        triggerScope(2, 7);
+    }
+
+#else
     char cc = 0;
     if (Serial.available()) { 
         cc = Serial.read();
@@ -80,31 +136,15 @@ void loop() {
             compass.randomWiggle( 1, true);
         else if (cc=='s')
             compass.randomWiggle(-1, true);
-        else
+        else if (cc==' ')
             compass.randomWiggle( 0, true);
-
+        else if (cc=='p')
+            compass.crazyWiggle(true);
     }
-
+#endif
     ring.update();
     compass.update();
 
-
-
-    // Some example procedures showing how to display to the pixels:
-    // Serial << "colorWipe RED" << endl;
-    // colorWipe(strip.Color(255, 0, 0), 50); // Red
-    // Serial << "colorWipe GREEN" << endl;
-    // colorWipe(strip.Color(0, 255, 0), 50); // Green
-    // Serial << "colorWipe BLUE" << endl;
-    // colorWipe(strip.Color(0, 0, 255), 50); // Blue
-    // //colorWipe(strip.Color(0, 0, 0, 255), 50); // White RGBW
-    // Serial << "counterclockwise" << endl;
-
-    // Send a theater pixel chase in...
-    // Serial << "theaterChase WHITE" << endl;
-    // theaterChase(strip.Color(127, 127, 127), 50); // White
-
-    // Serial << "theaterChase RED" << endl;
-    // theaterChase(strip.Color(127, 0, 0), 50); // Red
+    delay(5);
 }
 
