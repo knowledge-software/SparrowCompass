@@ -60,10 +60,10 @@ LightShow ring(LED_PIN, 50);
 // AccelStepper stepper = AccelStepper(AccelStepper::HALF4WIRE, 8, 10, 9, 11);
 
 unsigned long wiggleTimer = 0UL;
-#define WIGGLE_TRIGGER 73*SECONDS;
+#define WIGGLE_TRIGGER 3*37*SECONDS * 1/2;
 
 unsigned long crazyTimer = 0UL;
-#define CRAZY_TRIGGER 313*SECONDS;
+#define CRAZY_TRIGGER 3*157*SECONDS * 1/2;
 
 unsigned long dirTimer = 0UL;
 #define DIR_TRIGGER  20*SECONDS;
@@ -92,9 +92,9 @@ void setup() {
 // Debugging ATtinys requrie a scope.
 // This raises a pin to monitor status
 void triggerScope(int pin, int duration) {
-    digitalWrite(pin, HIGH);
-    delay(duration);
-    digitalWrite(pin,LOW);
+    // digitalWrite(pin, HIGH);
+    // delay(duration);
+    // digitalWrite(pin,LOW);
 }
 #endif
 
@@ -121,7 +121,7 @@ void loop() {
     }
 
     if (millis()>dirTimer) { 
-        compass.setDir(compass.randDir, true);
+        //compass.setDir(compass.randDir, true);
         dirTimer = millis() + DIR_TRIGGER + random(500);
         triggerScope(2, 7);
     }

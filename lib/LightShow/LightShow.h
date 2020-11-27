@@ -43,7 +43,7 @@ class LightShow {
                 //oceanTimer = Waveforms(4500, 20, 120);
                 led = 0;
                 timerA.setAmplitude(120);
-                timerA.setPeriod(4500);
+                timerA.setPeriod(5137);  //4500
                 timerA.setOffset(20);
                 dispatch |= 0x01;
                 return;
@@ -72,19 +72,19 @@ class LightShow {
             static int16_t count = -1;
 
             if (init) { // Iniitialize the timers and return
-                timerB.setPeriod(5000);
-                timerB.setOffset(0);
+                timerB.setPeriod(3000);
+                timerB.setOffset(50);
                 timerB.setAmplitude(200);
                 count = 0;
                 dispatch |= 0x02;
                 return;
             }
 
-            if (count==0 && timerB.triangleWave()>5) 
-                return; // we are fresh don't start yet.
+            // if (count==0 && timerB.triangleWave()>5) 
+            //     return; // we are fresh don't start yet.
 
             if (next>millis()) return;
-            next = millis()+20;
+            next = millis()+10;
             //Serial << ".";
 
             count++;
@@ -94,7 +94,7 @@ class LightShow {
             pixel.setPixelColor(12, pixel.Color(red, 0, 0));
             pixel.setPixelColor(18, pixel.Color(red, 0, 0));
 
-            if (count>100 && red<30) { // one cycle is complete.
+            if (count>550) { // one cycle is complete.
                 count = -1;  // flag as done and turn off colors
                 pixel.setPixelColor( 0, pixel.Color(0, 0, 0));
                 pixel.setPixelColor( 6, pixel.Color(0, 0, 0));
