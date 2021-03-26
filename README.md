@@ -14,7 +14,11 @@ I completed the decorations by painting the exterior with some bronze paint, mou
 ## Harware
 All of the materials are scraps from other projects or prototypes.  The only real expense was a few dollars for some assorted charms and a plastic dome. (<$20 all in>). I prototyped the softare using an old UNO but transferred the final code to an ATTiny85 with a USB power cable.  I develeoped various devices to control the compass's direction. I tinkered with some old CD stepper actuators with the intent of controlling the specific orientation by swinging a magnet around.  The motion was jumpy and made too much noise. I briefly tinkered with a bipolar motor with a gearing system 3D printed into the base. Again, I wasn't happy with the asthetics and noise.  I settled on a custom solenoid with an iron core oriented E/W. By controlling the duration and strength of the current I could wiggle the compass to cause it to swing wildly. I had an older version of the DRV8838 TI breakout from Polulu but probably could have cobbled a simple transistor amplifier for the coil.  I use software to pulse the magnetic field to create the swings in the compass while adding some light effects aside from the gentle sea background.  
 
-<iframe width="789" height="730" src="https://www.youtube.com/embed/ZSw0zdNgRyQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<!--iframe width="789" height="730" src="https://www.youtube.com/embed/ZSw0zdNgRyQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe-->
+<video width="320" height="240" controls>
+  <source src="https://www.youtube.com/embed/LiTZkOxYcNE" type="video/mp4">
+Your browser does not support the video tag.
+</video>
 <!--iframe width="789" height="730" src="https://www.youtube.com/embed/LiTZkOxYcNE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe-->
 
 ## Software
