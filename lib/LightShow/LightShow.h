@@ -2,7 +2,7 @@
 #include <Adafruit_NeoPixel.h>
 #include "Waveforms.h"
 
-const int NUMPIXELS = 24;
+const int NUMPIXELS = 10;
 
 // Specific for 24 pixel NeoPixelRing
 class LightShow {
@@ -32,7 +32,6 @@ class LightShow {
                 warningRed();
         }
 
-
         // NONBLOCKING colors trying to emulate refection off ocean surface.
         void oceanWaves(boolean init=false) {
             // static uint32_t duration;
@@ -42,7 +41,7 @@ class LightShow {
             if (init) { // Iniitialize the timers and return.
                 //oceanTimer = Waveforms(4500, 20, 120);
                 led = 0;
-                timerA.setAmplitude(120);
+                timerA.setAmplitude(220);  // was 120
                 timerA.setPeriod(5137);  //4500
                 timerA.setOffset(20);
                 dispatch |= 0x01;
@@ -55,11 +54,11 @@ class LightShow {
             int v = timerA.sineWave();
 
             led = (led+1)%pixel.numPixels();
-            if (0 == (led%6)) return;  // don't do anything with 4 of the pixels
+            //if (0 == (led%6)) return;  // don't do anything with 4 of the pixels For large arrays
             pixel.setPixelColor(led, pixel.Color((v-random(10))/4, (v-random(20))/2, (v-random(20))/2));
 
             led = (led+1)%pixel.numPixels();
-            if (0 == (led%6)) return;  // don't do anything with 4 of the pixels
+            //if (0 == (led%6)) return;  // don't do anything with 4 of the pixels for large arrays
             pixel.setPixelColor(led, pixel.Color(0, 0, random(20)+180-v));
 
             pixel.show();

@@ -20,7 +20,7 @@ const uint32_t ROTTIM = 500; // ms
 
 //BiPolarMotorCtl  motor = BiPolarMotorCtl(PWM_PIN, DIR_PIN);
 CompassCtl compass = CompassCtl(PWM_PIN, DIR_PIN);
-LightShow ring(LED_PIN, 50);
+LightShow ring(LED_PIN, 75);
 
 #ifdef __AVR__
   #include <avr/power.h>
@@ -66,7 +66,7 @@ unsigned long crazyTimer = 0UL;
 #define CRAZY_TRIGGER 3*157*SECONDS * 1/2;
 
 unsigned long dirTimer = 0UL;
-#define DIR_TRIGGER  20*SECONDS;
+#define DIR_TRIGGER  (20*SECONDS);
 
 /**
  *  Set up 
@@ -122,7 +122,7 @@ void loop() {
 
     if (millis()>dirTimer) { 
         //compass.setDir(compass.randDir, true);
-        dirTimer = millis() + DIR_TRIGGER + random(500);
+        dirTimer = millis() + random(500) + DIR_TRIGGER;
         triggerScope(2, 7);
     }
 
